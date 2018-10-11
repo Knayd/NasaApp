@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 
 public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -147,6 +148,11 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         @OnClick(R.id.item_fullscreen_photo_img)
         public void onClick(){
             Toast.makeText(mPhotoFullscreen.getContext(), "FullScreen", Toast.LENGTH_SHORT).show();
+        }
+        @OnLongClick(R.id.item_fullscreen_photo_img)
+        public boolean onPhotoLongClick(){
+             Toast.makeText(mPhotoFullscreen.getContext(),"Long click", Toast.LENGTH_LONG).show();
+             return true;
         }
 
         void bindView(ArrayList<Photo> list, int position) {

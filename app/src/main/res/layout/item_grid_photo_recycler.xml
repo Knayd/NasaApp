@@ -8,11 +8,14 @@
         android:id="@+id/item_photo_img"
         android:layout_width="130dp"
         android:layout_height="130dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:scaleType="centerCrop"
         android:src="@mipmap/ic_launcher_round"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
