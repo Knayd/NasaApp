@@ -7,13 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.applaudo.nasaapp.R;
 import com.example.applaudo.nasaapp.glide.GlideApp;
 import com.example.applaudo.nasaapp.models.Photo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,15 +21,17 @@ import butterknife.OnClick;
 
 public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public static final int GRID_TYPE = -1;
-    public static final int DETAILS_TYPE = -2;
+    private static final int GRID_TYPE = -1;
+    private static final int FULLSCREEN_TYPE = -2;
 
     private ArrayList<Photo> mPhotoList;
     private OnPhotoClicked mCallback;
+    private boolean showInFullScreen; //This is to determine wether or not show the image on fullscreen
 
-    public PhotoAdapter(ArrayList<Photo> mPhotoList, OnPhotoClicked mCallback) {
+    public PhotoAdapter(ArrayList<Photo> mPhotoList, OnPhotoClicked mCallback, Boolean showInFullScreen) {
         this.mPhotoList = mPhotoList;
         this.mCallback = mCallback;
+        this.showInFullScreen = showInFullScreen;
     }
 
     public interface OnPhotoClicked{
@@ -40,15 +42,31 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_photo_recycler,parent,false);
-        return new PhotoViewHolder(v);
+        View v;
+
+        switch (viewType){
+            case GRID_TYPE:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grid_photo_recycler,parent,false);
+                return new PhotoGridViewHolder(v);
+            default:
+                //Fullscreen
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fullscreen_photo_recycler,parent,false);
+                return new PhotoFullScreenViewHolder(v);
+        }
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        PhotoViewHolder photoViewHolder = (PhotoViewHolder) holder;
-        photoViewHolder.bindView(mPhotoList,position);
+
+        if (holder instanceof PhotoGridViewHolder) {
+            PhotoGridViewHolder photoGridViewHolder = (PhotoGridViewHolder) holder;
+            photoGridViewHolder.bindView(mPhotoList,position);
+        } else {
+            PhotoFullScreenViewHolder photoFullScreenViewHolder= (PhotoFullScreenViewHolder) holder;
+            photoFullScreenViewHolder.bindView(mPhotoList,position);
         }
+    }
 
     @Override
     public int getItemCount() {
@@ -57,18 +75,23 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+
+        if(showInFullScreen){
+            return FULLSCREEN_TYPE;
+        } else {
+            return GRID_TYPE;
+        }
     }
 
-    class PhotoViewHolder extends RecyclerView.ViewHolder{
+    class PhotoGridViewHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.item_photo_img) ImageView mPhotoImg;
-        //private ImageView mPhotoImg;
+        //private ImageView mPhotoFullscreen;
 
-        private PhotoViewHolder(View itemView) {
+        private PhotoGridViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            //mPhotoImg = itemView.findViewById(R.id.item_photo_img);
+            //mPhotoFullscreen = itemView.findViewById(R.id.item_photo_img);
         }
 
         //.setOnClickListener
@@ -95,5 +118,37 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
 
+    }
+
+    class PhotoFullScreenViewHolder extends RecyclerView.ViewHolder{
+
+        @BindView(R.id.item_fullscreen_photo_img) ImageView mPhotoFullscreen;
+
+
+         PhotoFullScreenViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this,itemView);
+        }
+
+        @OnClick(R.id.item_fullscreen_photo_img)
+        public void onClick(){
+            Toast.makeText(mPhotoFullscreen.getContext(), "FullScreen", Toast.LENGTH_SHORT).show();
+        }
+
+        void bindView(ArrayList<Photo> list, int position) {
+            //Method to load the image from url
+            String url = list.get(position).getImageSrc();
+
+            //This is to create the progress bar on every image
+            CircularProgressDrawable drawable = new CircularProgressDrawable(mPhotoFullscreen.getContext());
+            drawable.setStrokeWidth(5f);
+            drawable.setCenterRadius(30f);
+            drawable.start();
+            GlideApp.with(mPhotoFullscreen.getContext())
+                    .load(url)
+                    .placeholder(drawable)
+                    .error(R.drawable.nasa_placeholder)
+                    .into(mPhotoFullscreen);
+        }
     }
 }

@@ -29,7 +29,18 @@ public class MainActivity extends AppCompatActivity {
         PhotosFragment photosFragment = new PhotosFragment();
         transaction.replace(R.id.activity_main,photosFragment);
         transaction.commit();
+    }
 
+    @Override
+    public void onBackPressed() {
+
+            //To handle back pressing in the fullscreen menu
+             int fragmentCount = getFragmentManager().getBackStackEntryCount();
+            if (fragmentCount == 0) {
+                super.onBackPressed();
+            } else {
+                getFragmentManager().popBackStack();
+            }
 
     }
 }

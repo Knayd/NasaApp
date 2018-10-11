@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
@@ -42,12 +43,16 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnPho
             ArrayList<Photo> list = bundle.getParcelableArrayList(PhotosFragment.DATASET);
             int position = bundle.getInt(PhotosFragment.POSITION);
 
-            mAdapter = new PhotoAdapter(list,this);
+            mAdapter = new PhotoAdapter(list,this,true);
+
+            //To scroll to the desired position
+            manager.scrollToPosition(position);
+
             recyclerView.setAdapter(mAdapter);
             recyclerView.setLayoutManager(manager);
 
             //This is to make the images snap in the center
-            SnapHelper helper = new LinearSnapHelper();
+            SnapHelper helper = new PagerSnapHelper();
             helper.attachToRecyclerView(recyclerView);
 
             Toast.makeText(getContext(),list.get(position).getId(), Toast.LENGTH_SHORT).show();

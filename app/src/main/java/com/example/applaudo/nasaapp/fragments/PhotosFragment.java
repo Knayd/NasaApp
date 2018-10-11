@@ -22,6 +22,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,16 +34,18 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
 
     private PhotoAdapter mAdapter;
     private static final String API_KEY = "pRplRHwGn1Nx3xMNbGjTP8jGDfbKJkQNLCjzZREn";
-    private static final int SOL = 50;
-    private static final int PAGE = 3;
+    private static final int SOL = 30;
+    private static final int PAGE = 1;
 
     public static final String DATASET = "DATASET";
     public static final String POSITION = "POSITION";
+
+    private static final String TRANSACTION_TAG= "TRANSACTION_TAG";
+
     @BindView(R.id.fragment_photos_recycler) RecyclerView recyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
 
         //Inflating the layout for this fragment
         //And setting the data in the recycler
@@ -70,7 +73,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
 
                 ArrayList<Photo> photoList = response.body().getPhotos();
 
-                mAdapter = new PhotoAdapter(photoList,PhotosFragment.this);
+                mAdapter = new PhotoAdapter(photoList,PhotosFragment.this,false);
                 recyclerView.setAdapter(mAdapter);
                 recyclerView.setLayoutManager(manager);
                 }
@@ -80,6 +83,24 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
                 Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+        //To do the pagination
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (!recyclerView.canScrollVertically(1)) {
+                    Toast.makeText(recyclerView.getContext(), "Last", Toast.LENGTH_LONG).show();
+
+                }
+
+            }
+        });
+
+
+
         return v;
     }
 
@@ -99,6 +120,10 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
         detailsPhotoFragment.setArguments(bundle);
 
         transaction.add(R.id.activity_main,detailsPhotoFragment);
+        transaction.addToBackStack(TRANSACTION_TAG);
         transaction.commit();
     }
+
+
+
 }
