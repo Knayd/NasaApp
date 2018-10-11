@@ -5,4 +5,5 @@ import com.bumptech.glide.module.AppGlideModule;
 
 @GlideModule
 public class PhotoGlideModule extends AppGlideModule {
+    //Required to use the GlideApp class.
 }
