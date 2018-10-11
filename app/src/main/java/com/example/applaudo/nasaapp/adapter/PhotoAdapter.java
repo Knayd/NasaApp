@@ -12,6 +12,7 @@ import com.example.applaudo.nasaapp.R;
 import com.example.applaudo.nasaapp.glide.GlideApp;
 import com.example.applaudo.nasaapp.models.Photo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -20,28 +21,31 @@ import butterknife.OnClick;
 
 public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<Photo> mPhotoList;
+    public static final int GRID_TYPE = -1;
+    public static final int DETAILS_TYPE = -2;
+
+    private ArrayList<Photo> mPhotoList;
     private OnPhotoClicked mCallback;
 
-    public PhotoAdapter(List<Photo> mPhotoList, OnPhotoClicked mCallback) {
+    public PhotoAdapter(ArrayList<Photo> mPhotoList, OnPhotoClicked mCallback) {
         this.mPhotoList = mPhotoList;
         this.mCallback = mCallback;
     }
 
     public interface OnPhotoClicked{
-        void onPhotoClicked(int position);
+        void onPhotoClicked(int position,ArrayList<Photo> list);
     }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_photo_recycler,parent,false);
         return new PhotoViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         PhotoViewHolder photoViewHolder = (PhotoViewHolder) holder;
         photoViewHolder.bindView(mPhotoList,position);
         }
@@ -49,6 +53,11 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public int getItemCount() {
         return mPhotoList.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
     }
 
     class PhotoViewHolder extends RecyclerView.ViewHolder{
@@ -63,16 +72,17 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         //.setOnClickListener
+        //Callback for the interface
         @OnClick(R.id.item_photo_img)
         public void onClick(){
-            mCallback.onPhotoClicked(getAdapterPosition());
+            mCallback.onPhotoClicked(getAdapterPosition(), mPhotoList);
         }
 
-        void bindView(List<Photo> list, int position) {
+        void bindView(ArrayList<Photo> list, int position) {
             //Method to load the image from url
             String url = list.get(position).getImageSrc();
 
-            //This is to create the progress bar
+            //This is to create the progress bar on every image
             CircularProgressDrawable drawable = new CircularProgressDrawable(mPhotoImg.getContext());
             drawable.setStrokeWidth(5f);
             drawable.setCenterRadius(30f);

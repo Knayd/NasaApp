@@ -2,6 +2,8 @@ package com.example.applaudo.nasaapp.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import com.example.applaudo.nasaapp.models.Photo;
 import com.example.applaudo.nasaapp.models.PhotoRoot;
 import com.example.applaudo.nasaapp.network.Api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,9 +33,11 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
 
     private PhotoAdapter mAdapter;
     private static final String API_KEY = "pRplRHwGn1Nx3xMNbGjTP8jGDfbKJkQNLCjzZREn";
-    private static final int SOL = 30;
+    private static final int SOL = 50;
     private static final int PAGE = 3;
 
+    public static final String DATASET = "DATASET";
+    public static final String POSITION = "POSITION";
     @BindView(R.id.fragment_photos_recycler) RecyclerView recyclerView;
 
     @Override
@@ -63,7 +68,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
             @Override
             public void onResponse(Call<PhotoRoot> call, Response<PhotoRoot> response) {
 
-                List<Photo> photoList = response.body().getPhotos();
+                ArrayList<Photo> photoList = response.body().getPhotos();
 
                 mAdapter = new PhotoAdapter(photoList,PhotosFragment.this);
                 recyclerView.setAdapter(mAdapter);
@@ -79,7 +84,21 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
     }
 
     @Override
-    public void onPhotoClicked(int position) {
-        Toast.makeText(getContext(), String.valueOf(position), Toast.LENGTH_SHORT).show();
+    public void onPhotoClicked(int position, ArrayList<Photo> list) {
+        Toast.makeText(getContext(), list.get(position).getId(), Toast.LENGTH_SHORT).show();
+
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+
+        //Setting the args for the new fragment
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(DATASET, list);
+        bundle.putInt(POSITION,position);
+
+        DetailsPhotoFragment detailsPhotoFragment = new DetailsPhotoFragment();
+        detailsPhotoFragment.setArguments(bundle);
+
+        transaction.add(R.id.activity_main,detailsPhotoFragment);
+        transaction.commit();
     }
 }

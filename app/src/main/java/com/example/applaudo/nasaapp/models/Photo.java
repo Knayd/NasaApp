@@ -1,8 +1,11 @@
 package com.example.applaudo.nasaapp.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class Photo {
+public class Photo implements Parcelable {
 
     @SerializedName("id")
     private String mId;
@@ -53,4 +56,36 @@ public class Photo {
     public void setCamera(Camera mCamera) {
         this.mCamera = mCamera;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.mId);
+        dest.writeString(this.mImageSrc);
+        dest.writeParcelable(this.mRover, flags);
+        dest.writeParcelable(this.mCamera, flags);
+    }
+
+    protected Photo(Parcel in) {
+        this.mId = in.readString();
+        this.mImageSrc = in.readString();
+        this.mRover = in.readParcelable(Rover.class.getClassLoader());
+        this.mCamera = in.readParcelable(Camera.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Photo> CREATOR = new Parcelable.Creator<Photo>() {
+        @Override
+        public Photo createFromParcel(Parcel source) {
+            return new Photo(source);
+        }
+
+        @Override
+        public Photo[] newArray(int size) {
+            return new Photo[size];
+        }
+    };
 }

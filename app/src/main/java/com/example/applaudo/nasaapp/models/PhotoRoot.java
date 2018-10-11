@@ -2,23 +2,23 @@ package com.example.applaudo.nasaapp.models;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class PhotoRoot {
 
     @SerializedName("photos")
-    private List<Photo> mPhotos;
+    private ArrayList<Photo> mPhotos;
 
 
-    public PhotoRoot(List<Photo> mPhotos) {
+    public PhotoRoot(ArrayList<Photo> mPhotos) {
         this.mPhotos = mPhotos;
     }
 
-    public List<Photo> getPhotos() {
+    public ArrayList<Photo> getPhotos() {
         return mPhotos;
     }
 
-    public void setPhotos(List<Photo> mPhotos) {
+    public void setPhotos(ArrayList<Photo> mPhotos) {
         this.mPhotos = mPhotos;
     }
 }
