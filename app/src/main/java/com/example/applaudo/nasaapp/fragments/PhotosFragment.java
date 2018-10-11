@@ -1,6 +1,7 @@
 package com.example.applaudo.nasaapp.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -60,12 +61,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
 
         //Calling the Retrofit Interface to fetch the data
 
-                Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Api.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        Api api = retrofit.create(Api.class);
+        Api api = getRetrofit();
 
         //Calling the API and setting the arguments
         Call<PhotoRoot> call = api.getPhotoRoot(SOL,PAGE,API_KEY);
@@ -98,23 +94,19 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
 
                     Toast.makeText(recyclerView.getContext(), String.valueOf(currentPage), Toast.LENGTH_LONG).show();
 
-                    Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl(Api.BASE_URL)
-                            .addConverterFactory(GsonConverterFactory.create())
-                            .build();
+                    Api api = getRetrofit();
 
-                    Api api = retrofit.create(Api.class);
                     Call<PhotoRoot> call = api.getPhotoRoot(SOL,currentPage,API_KEY);
 
                     call.enqueue(new Callback<PhotoRoot>() {
                         @Override
-                        public void onResponse(Call<PhotoRoot> call, Response<PhotoRoot> response) {
+                        public void onResponse(@NonNull Call<PhotoRoot> call, @NonNull Response<PhotoRoot> response) {
                             //Updating the list with the new data
                             mAdapter.addElements(response.body().getPhotos());
                         }
 
                         @Override
-                        public void onFailure(Call<PhotoRoot> call, Throwable t) {
+                        public void onFailure(@NonNull Call<PhotoRoot> call, @NonNull Throwable t) {
 
                         }
                     });
@@ -122,7 +114,6 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
 
             }
         });
-
 
         mAdapter = new PhotoAdapter(PhotosFragment.this,false);
         recyclerView.setAdapter(mAdapter);
@@ -153,7 +144,18 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
     }
 
 
+    //Helper method to call Retrofit
+    private Api getRetrofit(){
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Api.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        Api api = retrofit.create(Api.class);
+
+        return api;
+    }
 
 
 }
