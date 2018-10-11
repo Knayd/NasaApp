@@ -13,16 +13,16 @@ import android.widget.Toast;
 
 import com.example.applaudo.nasaapp.R;
 import com.example.applaudo.nasaapp.adapter.PhotoAdapter;
+import com.example.applaudo.nasaapp.models.Camera;
 import com.example.applaudo.nasaapp.models.Photo;
 import com.example.applaudo.nasaapp.models.PhotoRoot;
+import com.example.applaudo.nasaapp.models.Rover;
 import com.example.applaudo.nasaapp.network.Api;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,6 +33,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
 
 
     private PhotoAdapter mAdapter;
+
     private static final String API_KEY = "pRplRHwGn1Nx3xMNbGjTP8jGDfbKJkQNLCjzZREn";
     private static final int SOL = 30;
     private static final int PAGE = 1;
@@ -41,6 +42,8 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
     public static final String POSITION = "POSITION";
 
     private static final String TRANSACTION_TAG= "TRANSACTION_TAG";
+
+    private int currentPage = 1;
 
     @BindView(R.id.fragment_photos_recycler) RecyclerView recyclerView;
 
@@ -73,9 +76,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
 
                 ArrayList<Photo> photoList = response.body().getPhotos();
 
-                mAdapter = new PhotoAdapter(photoList,PhotosFragment.this,false);
-                recyclerView.setAdapter(mAdapter);
-                recyclerView.setLayoutManager(manager);
+                mAdapter.setPhotoList(photoList);
                 }
 
             @Override
@@ -92,14 +93,40 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (!recyclerView.canScrollVertically(1)) {
-                    Toast.makeText(recyclerView.getContext(), "Last", Toast.LENGTH_LONG).show();
 
+                    currentPage++; //To load the next page
+
+                    Toast.makeText(recyclerView.getContext(), String.valueOf(currentPage), Toast.LENGTH_LONG).show();
+
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl(Api.BASE_URL)
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+
+                    Api api = retrofit.create(Api.class);
+                    Call<PhotoRoot> call = api.getPhotoRoot(SOL,currentPage,API_KEY);
+
+                    call.enqueue(new Callback<PhotoRoot>() {
+                        @Override
+                        public void onResponse(Call<PhotoRoot> call, Response<PhotoRoot> response) {
+                            //Updating the list with the new data
+                            mAdapter.addElements(response.body().getPhotos());
+                        }
+
+                        @Override
+                        public void onFailure(Call<PhotoRoot> call, Throwable t) {
+
+                        }
+                    });
                 }
 
             }
         });
 
 
+        mAdapter = new PhotoAdapter(PhotosFragment.this,false);
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(manager);
 
         return v;
     }
@@ -108,6 +135,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
     public void onPhotoClicked(int position, ArrayList<Photo> list) {
         Toast.makeText(getContext(), list.get(position).getId(), Toast.LENGTH_SHORT).show();
 
+        //To load the fragment with the fullscreen photo
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
 
@@ -123,6 +151,8 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
         transaction.addToBackStack(TRANSACTION_TAG);
         transaction.commit();
     }
+
+
 
 
 

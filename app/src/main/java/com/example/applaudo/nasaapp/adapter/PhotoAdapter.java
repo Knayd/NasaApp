@@ -24,18 +24,32 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private static final int GRID_TYPE = -1;
     private static final int FULLSCREEN_TYPE = -2;
 
-    private ArrayList<Photo> mPhotoList;
-    private OnPhotoClicked mCallback;
-    private boolean showInFullScreen; //This is to determine wether or not show the image on fullscreen
+    private ArrayList<Photo> mPhotoList = new ArrayList<>(); //This so it returns "0" at first load
 
-    public PhotoAdapter(ArrayList<Photo> mPhotoList, OnPhotoClicked mCallback, Boolean showInFullScreen) {
-        this.mPhotoList = mPhotoList;
+    private OnPhotoClicked mCallback;
+    private boolean showInFullScreen; //This is to determine whether or not show the image on fullscreen
+
+    public PhotoAdapter(OnPhotoClicked mCallback, Boolean showInFullScreen) {
         this.mCallback = mCallback;
         this.showInFullScreen = showInFullScreen;
     }
 
     public interface OnPhotoClicked{
         void onPhotoClicked(int position,ArrayList<Photo> list);
+    }
+
+    public ArrayList<Photo> getPhotoList() {
+        return mPhotoList;
+    }
+
+    public void setPhotoList(ArrayList<Photo> mPhotoList) {
+        this.mPhotoList = mPhotoList;
+        notifyDataSetChanged();
+    }
+
+    public void addElements(ArrayList<Photo> mPhotoList){
+        this.mPhotoList.addAll(mPhotoList);
+        notifyDataSetChanged();
     }
 
     @NonNull

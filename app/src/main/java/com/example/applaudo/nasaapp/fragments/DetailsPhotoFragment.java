@@ -43,7 +43,9 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnPho
             ArrayList<Photo> list = bundle.getParcelableArrayList(PhotosFragment.DATASET);
             int position = bundle.getInt(PhotosFragment.POSITION);
 
-            mAdapter = new PhotoAdapter(list,this,true);
+            mAdapter = new PhotoAdapter(this,true);
+
+            mAdapter.setPhotoList(list);
 
             //To scroll to the desired position
             manager.scrollToPosition(position);
@@ -58,8 +60,10 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnPho
             Toast.makeText(getContext(),list.get(position).getId(), Toast.LENGTH_SHORT).show();
         }
 
+        return v;
 
 
+        //TODO: Clean afterwards
 
 //        Button btn = v.findViewById(R.id.btn_close);
 //
@@ -74,7 +78,6 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnPho
 //            }
 //        });
 
-        return v;
     }
 
     @Override
