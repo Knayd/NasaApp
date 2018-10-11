@@ -17,17 +17,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
-
-    @OnClick(R.id.btn_test)
-    public void onClick(){
-        Toast.makeText(this, "Something esle", Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
 
         //Creating the new fragment.
         FragmentManager manager = getSupportFragmentManager();
@@ -36,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
         PhotosFragment photosFragment = new PhotosFragment();
         transaction.replace(R.id.activity_main,photosFragment);
         transaction.commit();
-
 
 
     }

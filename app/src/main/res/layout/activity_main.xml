@@ -7,10 +7,4 @@
     tools:context=".activity.MainActivity"
     android:id="@+id/activity_main">
 
-    <Button
-        android:id="@+id/btn_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Something"/>
-
 </android.support.constraint.ConstraintLayout>

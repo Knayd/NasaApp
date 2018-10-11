@@ -30,7 +30,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
 
     private PhotoAdapter mAdapter;
     private static final String API_KEY = "pRplRHwGn1Nx3xMNbGjTP8jGDfbKJkQNLCjzZREn";
-    private static final int SOL = 50;
+    private static final int SOL = 30;
     private static final int PAGE = 3;
 
     @BindView(R.id.fragment_photos_recycler) RecyclerView recyclerView;
