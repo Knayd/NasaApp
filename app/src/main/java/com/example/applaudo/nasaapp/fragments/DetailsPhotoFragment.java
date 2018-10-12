@@ -1,14 +1,21 @@
 package com.example.applaudo.nasaapp.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.applaudo.nasaapp.R;
@@ -61,23 +68,30 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
             Toast.makeText(getContext(),list.get(position).getId(), Toast.LENGTH_SHORT).show();
         }
 
+        //Getting the reference for the toolbar and its elements
+        final Toolbar mToolbar = container.findViewById(R.id.toolbar_main);
+
+        ImageView mBackButton = mToolbar.findViewById(R.id.toolbar_back_button);
+        final TextView mAppTitle = mToolbar.findViewById(R.id.toolbar_app_title);
+
+        mToolbar.setBackgroundColor(Color.TRANSPARENT);
+        mAppTitle.setVisibility(View.GONE);
+        //mBackButton.setVisibility(View.GONE);
+
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mToolbar.setBackgroundColor(Color.BLUE);
+                mAppTitle.setVisibility(View.VISIBLE);
+                FragmentManager manager = getFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+
+                transaction.detach(DetailsPhotoFragment.this);
+                transaction.commit();
+            }
+        });
+
         return v;
-
-
-        //TODO: Clean afterwards
-
-//        Button btn = v.findViewById(R.id.btn_close);
-//
-//        btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                FragmentManager manager = getFragmentManager();
-//                FragmentTransaction transaction = manager.beginTransaction();
-//
-//                transaction.detach(DetailsPhotoFragment.this);
-//                transaction.commit();
-//            }
-//        });
 
     }
 

@@ -14,17 +14,29 @@
         app:popupTheme="@style/Widget.AppCompat.PopupMenu"
         android:background="@color/colorPrimary"
         android:elevation="4dp"
+        android:id="@+id/toolbar_main"
         >
 
+        <!-- Custom Toolbar -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <ImageView
+                android:id="@+id/toolbar_back_button"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:paddingRight="12dp"
                 android:src="@drawable/ic_arrow_back"/>
+
+            <TextView
+                android:id="@+id/toolbar_app_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/app_name"
+                android:textColor="@android:color/white"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:gravity="center_vertical"/>
 
         </RelativeLayout>
 
