@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnPhotoClicked, PhotoAdapter.OnPhotoLongClicked {
+public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDetailsItemClicked {
 
     private PhotoAdapter mAdapter;
 
@@ -44,7 +44,7 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnPho
             ArrayList<Photo> list = bundle.getParcelableArrayList(PhotosFragment.DATASET);
             int position = bundle.getInt(PhotosFragment.POSITION);
 
-            mAdapter = new PhotoAdapter(this,true,this);
+            mAdapter = new PhotoAdapter(this,true);
 
             mAdapter.setPhotoList(list);
 
@@ -82,8 +82,8 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnPho
     }
 
     @Override
-    public void onPhotoClicked(int position, ArrayList<Photo> list) {
-
+    public void onPhotoSimpleClicked() {
+        //TODO: To be implemented
     }
 
     @Override

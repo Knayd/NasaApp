@@ -14,10 +14,8 @@ import android.widget.Toast;
 
 import com.example.applaudo.nasaapp.R;
 import com.example.applaudo.nasaapp.adapter.PhotoAdapter;
-import com.example.applaudo.nasaapp.models.Camera;
 import com.example.applaudo.nasaapp.models.Photo;
 import com.example.applaudo.nasaapp.models.PhotoRoot;
-import com.example.applaudo.nasaapp.models.Rover;
 import com.example.applaudo.nasaapp.network.Api;
 
 import java.util.ArrayList;
@@ -30,7 +28,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClicked {
+public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemClicked {
 
     //region Constants
     private PhotoAdapter mAdapter;
@@ -117,7 +115,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
             }
         });
 
-        mAdapter = new PhotoAdapter(PhotosFragment.this,false,null);
+        mAdapter = new PhotoAdapter(PhotosFragment.this,false);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(manager);
 
@@ -125,7 +123,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
     }
 
     @Override
-    public void onPhotoClicked(int position, ArrayList<Photo> list) {
+    public void onPhotoSimpleClicked(int position, ArrayList<Photo> list) {
         Toast.makeText(getContext(), list.get(position).getId(), Toast.LENGTH_SHORT).show();
 
         //To load the fragment with the fullscreen photo
