@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.applaudo.nasaapp.R;
 import com.example.applaudo.nasaapp.glide.GlideApp;
 import com.example.applaudo.nasaapp.models.Photo;
@@ -140,6 +141,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     .load(url)
                     .placeholder(drawable)
                     .error(R.drawable.nasa_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .into(mPhotoImg);
         }
 
@@ -179,6 +181,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     .load(url)
                     .placeholder(drawable)
                     .error(R.drawable.nasa_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .into(mPhotoFullscreen);
         }
     }
