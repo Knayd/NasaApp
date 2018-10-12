@@ -32,7 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClicked {
 
-
+    //region Constants
     private PhotoAdapter mAdapter;
 
     private static final String API_KEY = "pRplRHwGn1Nx3xMNbGjTP8jGDfbKJkQNLCjzZREn";
@@ -45,6 +45,8 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
     private static final String TRANSACTION_TAG= "TRANSACTION_TAG";
 
     private int currentPage = 1;
+
+    //endregion
 
     @BindView(R.id.fragment_photos_recycler) RecyclerView recyclerView;
 
@@ -115,7 +117,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnPhotoClic
             }
         });
 
-        mAdapter = new PhotoAdapter(PhotosFragment.this,false);
+        mAdapter = new PhotoAdapter(PhotosFragment.this,false,null);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(manager);
 

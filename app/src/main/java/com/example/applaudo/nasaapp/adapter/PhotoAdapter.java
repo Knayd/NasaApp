@@ -28,19 +28,21 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private ArrayList<Photo> mPhotoList = new ArrayList<>(); //This so it returns "0" at first load
 
     private OnPhotoClicked mCallback;
+    private OnPhotoLongClicked mLongCallback;
     private boolean showInFullScreen; //This is to determine whether or not show the image on fullscreen
 
-    public PhotoAdapter(OnPhotoClicked mCallback, Boolean showInFullScreen) {
+    public PhotoAdapter(OnPhotoClicked mCallback, Boolean showInFullScreen, OnPhotoLongClicked mLongCallback) {
         this.mCallback = mCallback;
         this.showInFullScreen = showInFullScreen;
+        this.mLongCallback = mLongCallback;
     }
 
     public interface OnPhotoClicked{
         void onPhotoClicked(int position,ArrayList<Photo> list);
     }
 
-    public ArrayList<Photo> getPhotoList() {
-        return mPhotoList;
+    public interface OnPhotoLongClicked{
+        void onPhotoLongClicked(int position, ArrayList<Photo> list);
     }
 
     public void setPhotoList(ArrayList<Photo> mPhotoList) {
@@ -151,7 +153,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
         @OnLongClick(R.id.item_fullscreen_photo_img)
         public boolean onPhotoLongClick(){
-             Toast.makeText(mPhotoFullscreen.getContext(),"Long click", Toast.LENGTH_LONG).show();
+             mLongCallback.onPhotoLongClicked(getAdapterPosition(), mPhotoList);
              return true;
         }
 
