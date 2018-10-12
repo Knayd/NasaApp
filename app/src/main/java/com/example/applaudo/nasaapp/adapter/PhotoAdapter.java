@@ -159,6 +159,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         public void onClick(){
             mDetailsCallback.onPhotoSimpleClicked();
         }
+
         @OnLongClick(R.id.item_fullscreen_photo_img)
         public boolean onPhotoLongClick(){
              mDetailsCallback.onPhotoLongClicked(getAdapterPosition(), mPhotoList);

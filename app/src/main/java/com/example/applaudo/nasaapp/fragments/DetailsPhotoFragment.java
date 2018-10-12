@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDetailsItemClicked {
 
@@ -35,13 +36,17 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
     public static final String DIALOG_POSITION="DIALOG_POSITION";
     public static final String DIALOG_LIST="DIALOG_LIST";
 
-    @BindView(R.id.fragment_photodetails_recycler) RecyclerView recyclerView;
+    private ToolbarViewHolder mToolbarViewHolder;
+    private RecyclerViewHolder mRecyclerViewHolder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_details_photo, container, false);
-        ButterKnife.bind(this,v);
+
+        //Binding each ViewHolder individually
+        mToolbarViewHolder = new ToolbarViewHolder(container);
+        mRecyclerViewHolder = new RecyclerViewHolder(v);
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false);
 
@@ -58,38 +63,19 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
             //To scroll to the desired position
             manager.scrollToPosition(position);
 
-            recyclerView.setAdapter(mAdapter);
-            recyclerView.setLayoutManager(manager);
+            mRecyclerViewHolder.recyclerView.setAdapter(mAdapter);
+            mRecyclerViewHolder.recyclerView.setLayoutManager(manager);
 
             //This is to make the images snap in the center
             SnapHelper helper = new PagerSnapHelper();
-            helper.attachToRecyclerView(recyclerView);
+            helper.attachToRecyclerView(mRecyclerViewHolder.recyclerView);
 
             Toast.makeText(getContext(),list.get(position).getId(), Toast.LENGTH_SHORT).show();
         }
 
-        //Getting the reference for the toolbar and its elements
-        final Toolbar mToolbar = container.findViewById(R.id.toolbar_main);
-
-        ImageView mBackButton = mToolbar.findViewById(R.id.toolbar_back_button);
-        final TextView mAppTitle = mToolbar.findViewById(R.id.toolbar_app_title);
-
-        mToolbar.setBackgroundColor(Color.TRANSPARENT);
-        mAppTitle.setVisibility(View.GONE);
-        //mBackButton.setVisibility(View.GONE);
-
-        mBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mToolbar.setBackgroundColor(Color.BLUE);
-                mAppTitle.setVisibility(View.VISIBLE);
-                FragmentManager manager = getFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-
-                transaction.detach(DetailsPhotoFragment.this);
-                transaction.commit();
-            }
-        });
+        //Hiding the elements in the toolbar
+        mToolbarViewHolder.toolbar.setBackgroundColor(Color.TRANSPARENT);
+        mToolbarViewHolder.appTitle.setVisibility(View.GONE);
 
         return v;
 
@@ -113,4 +99,38 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
 
         dialogFragment.show(getFragmentManager(), "IDK");
     }
+
+
+    //Viewholders to bind the different views using Butteknife
+    class RecyclerViewHolder{
+
+        @BindView(R.id.fragment_photodetails_recycler) RecyclerView recyclerView;
+
+        RecyclerViewHolder(View view){
+            ButterKnife.bind(this,view);
+        }
+
+    }
+
+    class ToolbarViewHolder{
+        @BindView(R.id.toolbar_main) Toolbar toolbar;
+        @BindView(R.id.toolbar_back_button) ImageView backButton;
+        @BindView(R.id.toolbar_app_title) TextView appTitle;
+
+        ToolbarViewHolder(View view){
+            ButterKnife.bind(this,view);
+        }
+
+        @OnClick(R.id.toolbar_back_button)
+        public void backButtonPressed(){
+            toolbar.setBackgroundColor(Color.BLUE);
+            appTitle.setVisibility(View.VISIBLE);
+            FragmentManager manager = getFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+
+            transaction.detach(DetailsPhotoFragment.this);
+            transaction.commit();
+        }
+    }
+
 }
