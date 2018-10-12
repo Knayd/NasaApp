@@ -1,5 +1,7 @@
 package com.example.applaudo.nasaapp.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.applaudo.nasaapp.R;
+import com.example.applaudo.nasaapp.activity.MainActivity;
 import com.example.applaudo.nasaapp.adapter.PhotoAdapter;
 import com.example.applaudo.nasaapp.dialogfragment.BottomSheetPhotoDialogFragment;
 import com.example.applaudo.nasaapp.models.Photo;
@@ -38,6 +41,28 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
 
     private ToolbarViewHolder mToolbarViewHolder;
     private RecyclerViewHolder mRecyclerViewHolder;
+
+
+    private HideToolbar mCallback;
+
+
+    public interface HideToolbar{
+        void hideToolbar();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        mCallback = (MainActivity) context;
+    }
+
+    @Override
+    public void onPhotoSimpleClicked() {
+        mCallback.hideToolbar();
+    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,21 +95,18 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
             SnapHelper helper = new PagerSnapHelper();
             helper.attachToRecyclerView(mRecyclerViewHolder.recyclerView);
 
-            Toast.makeText(getContext(),list.get(position).getId(), Toast.LENGTH_SHORT).show();
         }
 
         //Hiding the elements in the toolbar
         mToolbarViewHolder.toolbar.setBackgroundColor(Color.TRANSPARENT);
         mToolbarViewHolder.appTitle.setVisibility(View.GONE);
+        mToolbarViewHolder.backButton.setVisibility(View.INVISIBLE);
 
         return v;
 
     }
 
-    @Override
-    public void onPhotoSimpleClicked() {
-        //TODO: To be implemented
-    }
+
 
     @Override
     public void onPhotoLongClicked(int position, ArrayList<Photo> list) {
@@ -123,13 +145,15 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
 
         @OnClick(R.id.toolbar_back_button)
         public void backButtonPressed(){
-            toolbar.setBackgroundColor(Color.BLUE);
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             appTitle.setVisibility(View.VISIBLE);
             FragmentManager manager = getFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
 
             transaction.detach(DetailsPhotoFragment.this);
             transaction.commit();
+
+            mCallback.hideToolbar();
         }
     }
 
