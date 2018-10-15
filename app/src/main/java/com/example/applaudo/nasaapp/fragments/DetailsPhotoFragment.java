@@ -1,10 +1,8 @@
 package com.example.applaudo.nasaapp.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -18,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.applaudo.nasaapp.R;
 import com.example.applaudo.nasaapp.activity.MainActivity;
@@ -58,7 +55,7 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
     }
 
     @Override
-    public void onPhotoSimpleClicked() {
+    public void onPhotoSimpleClicked(int position, ArrayList<Photo> list) {
         mCallback.hideToolbar();
     }
 
@@ -121,7 +118,7 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
     }
 
 
-    //Viewholders to bind the different views using Butteknife
+    //Viewholders to bind the different views using Butterknife
     class RecyclerViewHolder {
 
         @BindView(R.id.fragment_photodetails_recycler)

@@ -87,7 +87,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
 
             @Override
             public void onFailure(Call<PhotoRoot> call, Throwable t) {
-                Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "There was an error loading the data.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -101,8 +101,6 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
                 if (!recyclerView.canScrollVertically(1)) {
 
                     currentPage++; //To load the next page
-
-                    Toast.makeText(recyclerView.getContext(), String.valueOf(currentPage), Toast.LENGTH_LONG).show();
 
                     Api api = getRetrofit(getOkhttpClient());
 
@@ -134,7 +132,6 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
 
     @Override
     public void onPhotoSimpleClicked(int position, ArrayList<Photo> list) {
-        Toast.makeText(getContext(), list.get(position).getId(), Toast.LENGTH_SHORT).show();
 
         //To load the fragment with the fullscreen photo
         FragmentManager manager = getFragmentManager();
