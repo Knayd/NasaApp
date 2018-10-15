@@ -1,5 +1,8 @@
 package com.example.applaudo.nasaapp.fragments;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -18,10 +21,13 @@ import com.example.applaudo.nasaapp.models.Photo;
 import com.example.applaudo.nasaapp.models.PhotoRoot;
 import com.example.applaudo.nasaapp.network.Api;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.Interceptor;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -155,6 +161,37 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
         Api api = retrofit.create(Api.class);
 
         return api;
+    }
+
+    //Interceptors
+    private class OfflineResponseCacheInterceptor implements Interceptor {
+        @Override
+        public okhttp3.Response intercept(Chain chain) throws IOException {
+            ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo =  connectivityManager.getActiveNetworkInfo();
+
+            Request request = chain.request();
+
+            if (networkInfo!=null && networkInfo.isConnected()){
+                request = request.newBuilder()
+                        .header("Cache-Control",
+                                "public, only-if-cached, max-stale=" + 2419200)
+                        .build();
+            }
+
+            return chain.proceed(request);
+        }
+    }
+
+    private class ResponseCacheInterceptor implements Interceptor{
+
+        @Override
+        public okhttp3.Response intercept(Chain chain) throws IOException {
+            okhttp3.Response originalResponse = chain.proceed(chain.request());
+            return  originalResponse.newBuilder()
+                    .header("Cache-Control", "public, max-age=" + 60)
+                    .build();
+        }
     }
 
 
