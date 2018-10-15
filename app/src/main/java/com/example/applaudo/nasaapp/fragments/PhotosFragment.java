@@ -21,12 +21,15 @@ import com.example.applaudo.nasaapp.models.Photo;
 import com.example.applaudo.nasaapp.models.PhotoRoot;
 import com.example.applaudo.nasaapp.network.Api;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.Cache;
 import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,7 +70,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
 
         //Calling the Retrofit Interface to fetch the data
 
-        Api api = getRetrofit();
+        Api api = getRetrofit(getOkhttpClient());
 
         //Calling the API and setting the arguments
         Call<PhotoRoot> call = api.getPhotoRoot(SOL,PAGE,API_KEY);
@@ -100,7 +103,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
 
                     Toast.makeText(recyclerView.getContext(), String.valueOf(currentPage), Toast.LENGTH_LONG).show();
 
-                    Api api = getRetrofit();
+                    Api api = getRetrofit(getOkhttpClient());
 
                     Call<PhotoRoot> call = api.getPhotoRoot(SOL,currentPage,API_KEY);
 
@@ -151,10 +154,11 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
 
 
     //Helper method to call Retrofit
-    private Api getRetrofit(){
+    private Api getRetrofit(OkHttpClient client){
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Api.BASE_URL)
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -172,7 +176,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
 
             Request request = chain.request();
 
-            if (networkInfo!=null && networkInfo.isConnected()){
+            if (networkInfo!=null && !networkInfo.isConnected()){
                 request = request.newBuilder()
                         .header("Cache-Control",
                                 "public, only-if-cached, max-stale=" + 2419200)
@@ -192,6 +196,20 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
                     .header("Cache-Control", "public, max-age=" + 60)
                     .build();
         }
+    }
+
+    private  OkHttpClient getOkhttpClient(){
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                // Enable response caching
+                .addNetworkInterceptor(new ResponseCacheInterceptor())
+                .addInterceptor(new OfflineResponseCacheInterceptor())
+                // Set the cache location and size (5 MB)
+                .cache(new Cache(new File(getContext().getCacheDir(),
+                        "apiResponses"), 5 * 1024 * 1024))
+                .build();
+
+        return okHttpClient;
     }
 
 
