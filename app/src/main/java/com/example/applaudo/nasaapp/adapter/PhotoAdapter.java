@@ -50,6 +50,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public interface OnDetailsItemClicked {
 
         void onPhotoSimpleClicked();
+
         void onPhotoLongClicked(int position, ArrayList<Photo> list);
     }
 
@@ -60,7 +61,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     //Helper method
-    public void addElements(ArrayList<Photo> mPhotoList){
+    public void addElements(ArrayList<Photo> mPhotoList) {
         this.mPhotoList.addAll(mPhotoList);
         notifyDataSetChanged();
     }
@@ -71,13 +72,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         View v;
 
-        switch (viewType){
+        switch (viewType) {
             case GRID_TYPE:
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grid_photo_recycler,parent,false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grid_photo_recycler, parent, false);
                 return new PhotoGridViewHolder(v);
             default:
                 //Fullscreen
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fullscreen_photo_recycler,parent,false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fullscreen_photo_recycler, parent, false);
                 return new PhotoFullScreenViewHolder(v);
         }
 
@@ -88,10 +89,10 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         if (holder instanceof PhotoGridViewHolder) {
             PhotoGridViewHolder photoGridViewHolder = (PhotoGridViewHolder) holder;
-            photoGridViewHolder.bindView(mPhotoList,position);
+            photoGridViewHolder.bindView(mPhotoList, position);
         } else {
-            PhotoFullScreenViewHolder photoFullScreenViewHolder= (PhotoFullScreenViewHolder) holder;
-            photoFullScreenViewHolder.bindView(mPhotoList,position);
+            PhotoFullScreenViewHolder photoFullScreenViewHolder = (PhotoFullScreenViewHolder) holder;
+            photoFullScreenViewHolder.bindView(mPhotoList, position);
         }
     }
 
@@ -103,16 +104,17 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public int getItemViewType(int position) {
 
-        if(showInFullScreen){
+        if (showInFullScreen) {
             return FULLSCREEN_TYPE;
         } else {
             return GRID_TYPE;
         }
     }
 
-    class PhotoGridViewHolder extends RecyclerView.ViewHolder{
+    class PhotoGridViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.item_photo_img) ImageView mPhotoImg;
+        @BindView(R.id.item_photo_img)
+        ImageView mPhotoImg;
         //private ImageView mPhotoFullscreen;
 
         private PhotoGridViewHolder(View itemView) {
@@ -124,7 +126,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         //.setOnClickListener
         //Callback for the interface
         @OnClick(R.id.item_photo_img)
-        public void onClick(){
+        public void onClick() {
             mGridCallback.onPhotoSimpleClicked(getAdapterPosition(), mPhotoList);
         }
 
@@ -147,25 +149,26 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     }
 
-    class PhotoFullScreenViewHolder extends RecyclerView.ViewHolder{
+    class PhotoFullScreenViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.item_fullscreen_photo_img) ImageView mPhotoFullscreen;
+        @BindView(R.id.item_fullscreen_photo_img)
+        ImageView mPhotoFullscreen;
 
 
-         PhotoFullScreenViewHolder(View itemView) {
+        PhotoFullScreenViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
 
         @OnClick(R.id.item_fullscreen_photo_img)
-        public void onClick(){
+        public void onClick() {
             mDetailsCallback.onPhotoSimpleClicked();
         }
 
         @OnLongClick(R.id.item_fullscreen_photo_img)
-        public boolean onPhotoLongClick(){
-             mDetailsCallback.onPhotoLongClicked(getAdapterPosition(), mPhotoList);
-             return true;
+        public boolean onPhotoLongClick() {
+            mDetailsCallback.onPhotoLongClicked(getAdapterPosition(), mPhotoList);
+            return true;
         }
 
         void bindView(ArrayList<Photo> list, int position) {

@@ -25,10 +25,10 @@ public class MainActivity extends AppCompatActivity implements DetailsPhotoFragm
     @BindView(R.id.toolbar_app_title)
     TextView mAppTitle;
 
-    Boolean isBackButtonVisible = false ;
+    Boolean isBackButtonVisible = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)  {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -40,35 +40,35 @@ public class MainActivity extends AppCompatActivity implements DetailsPhotoFragm
         FragmentTransaction transaction = manager.beginTransaction();
 
         PhotosFragment photosFragment = new PhotosFragment();
-        transaction.replace(R.id.activity_main,photosFragment);
+        transaction.replace(R.id.activity_main, photosFragment);
         transaction.commit();
     }
 
 
     @Override
     public void onBackPressed() {
-            //To handle back pressing in the fullscreen menu
-             int fragmentCount = getFragmentManager().getBackStackEntryCount();
-            if (fragmentCount == 0) {
-                super.onBackPressed();
-            } else {
-                getFragmentManager().popBackStack();
-            }
+        //To handle back pressing in the fullscreen menu
+        int fragmentCount = getFragmentManager().getBackStackEntryCount();
+        if (fragmentCount == 0) {
+            super.onBackPressed();
+        } else {
+            getFragmentManager().popBackStack();
+        }
 
-            //To set back the color to the toolbar
-            mToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        //To set back the color to the toolbar
+        mToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
-            mAppTitle.setVisibility(View.VISIBLE);
-            mBackButton.setVisibility(View.GONE);
+        mAppTitle.setVisibility(View.VISIBLE);
+        mBackButton.setVisibility(View.GONE);
 
-            isBackButtonVisible = false;
+        isBackButtonVisible = false;
 
     }
 
     @Override
     public void hideToolbar() {
 
-        if(isBackButtonVisible) {
+        if (isBackButtonVisible) {
             mBackButton.setVisibility(View.GONE);
             isBackButtonVisible = false;
 

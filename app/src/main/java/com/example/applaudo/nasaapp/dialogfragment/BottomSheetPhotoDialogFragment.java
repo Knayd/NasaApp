@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 
 public class BottomSheetPhotoDialogFragment extends android.support.design.widget.BottomSheetDialogFragment {
 
-    public static BottomSheetPhotoDialogFragment getInstance(){
+    public static BottomSheetPhotoDialogFragment getInstance() {
         return new BottomSheetPhotoDialogFragment();
     }
 
@@ -38,11 +38,11 @@ public class BottomSheetPhotoDialogFragment extends android.support.design.widge
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.bottom_sheet_photo_details,container,false);
+        View v = inflater.inflate(R.layout.bottom_sheet_photo_details, container, false);
 
         Bundle bundle = getArguments();
 
-        ButterKnife.bind(this,v);
+        ButterKnife.bind(this, v);
 
         //Retrieving the data sent from the fullscreen photo
         int position = bundle.getInt(DetailsPhotoFragment.DIALOG_POSITION);

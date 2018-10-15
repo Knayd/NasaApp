@@ -36,8 +36,8 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
 
     private PhotoAdapter mAdapter;
 
-    public static final String DIALOG_POSITION="DIALOG_POSITION";
-    public static final String DIALOG_LIST="DIALOG_LIST";
+    public static final String DIALOG_POSITION = "DIALOG_POSITION";
+    public static final String DIALOG_LIST = "DIALOG_LIST";
 
     private ToolbarViewHolder mToolbarViewHolder;
     private RecyclerViewHolder mRecyclerViewHolder;
@@ -46,7 +46,7 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
     private HideToolbar mCallback;
 
 
-    public interface HideToolbar{
+    public interface HideToolbar {
         void hideToolbar();
     }
 
@@ -63,7 +63,6 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -73,7 +72,7 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
         mToolbarViewHolder = new ToolbarViewHolder(container);
         mRecyclerViewHolder = new RecyclerViewHolder(v);
 
-        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
         //Retrieving the args
         Bundle bundle = getArguments();
@@ -81,7 +80,7 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
             ArrayList<Photo> list = bundle.getParcelableArrayList(PhotosFragment.DATASET);
             int position = bundle.getInt(PhotosFragment.POSITION);
 
-            mAdapter = new PhotoAdapter(this,true);
+            mAdapter = new PhotoAdapter(this, true);
 
             mAdapter.setPhotoList(list);
 
@@ -107,7 +106,6 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
     }
 
 
-
     @Override
     public void onPhotoLongClicked(int position, ArrayList<Photo> list) {
         BottomSheetPhotoDialogFragment dialogFragment = BottomSheetPhotoDialogFragment.getInstance();
@@ -115,8 +113,8 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
         //Sending the data to the bottom sheet dialog from the fullscreen photo
 
         Bundle bundle = new Bundle();
-        bundle.putInt(DIALOG_POSITION,position);
-        bundle.putParcelableArrayList(DIALOG_LIST,list);
+        bundle.putInt(DIALOG_POSITION, position);
+        bundle.putParcelableArrayList(DIALOG_LIST, list);
         dialogFragment.setArguments(bundle);
 
         dialogFragment.show(getFragmentManager(), "IDK");
@@ -124,27 +122,31 @@ public class DetailsPhotoFragment extends Fragment implements PhotoAdapter.OnDet
 
 
     //Viewholders to bind the different views using Butteknife
-    class RecyclerViewHolder{
+    class RecyclerViewHolder {
 
-        @BindView(R.id.fragment_photodetails_recycler) RecyclerView recyclerView;
+        @BindView(R.id.fragment_photodetails_recycler)
+        RecyclerView recyclerView;
 
-        RecyclerViewHolder(View view){
-            ButterKnife.bind(this,view);
+        RecyclerViewHolder(View view) {
+            ButterKnife.bind(this, view);
         }
 
     }
 
-    class ToolbarViewHolder{
-        @BindView(R.id.toolbar_main) Toolbar toolbar;
-        @BindView(R.id.toolbar_back_button) ImageView backButton;
-        @BindView(R.id.toolbar_app_title) TextView appTitle;
+    class ToolbarViewHolder {
+        @BindView(R.id.toolbar_main)
+        Toolbar toolbar;
+        @BindView(R.id.toolbar_back_button)
+        ImageView backButton;
+        @BindView(R.id.toolbar_app_title)
+        TextView appTitle;
 
-        ToolbarViewHolder(View view){
-            ButterKnife.bind(this,view);
+        ToolbarViewHolder(View view) {
+            ButterKnife.bind(this, view);
         }
 
         @OnClick(R.id.toolbar_back_button)
-        public void backButtonPressed(){
+        public void backButtonPressed() {
             toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             appTitle.setVisibility(View.VISIBLE);
             FragmentManager manager = getFragmentManager();

@@ -49,13 +49,14 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
     public static final String DATASET = "DATASET";
     public static final String POSITION = "POSITION";
 
-    private static final String TRANSACTION_TAG= "TRANSACTION_TAG";
+    private static final String TRANSACTION_TAG = "TRANSACTION_TAG";
 
     private int currentPage = 1;
 
     //endregion
 
-    @BindView(R.id.fragment_photos_recycler) RecyclerView recyclerView;
+    @BindView(R.id.fragment_photos_recycler)
+    RecyclerView recyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,16 +65,16 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
         //And setting the data in the recycler
         View v = inflater.inflate(R.layout.fragment_photos, container, false);
 
-        ButterKnife.bind(this,v);
+        ButterKnife.bind(this, v);
 
-        final GridLayoutManager manager = new GridLayoutManager(getContext(),3);
+        final GridLayoutManager manager = new GridLayoutManager(getContext(), 3);
 
         //Calling the Retrofit Interface to fetch the data
 
         Api api = getRetrofit(getOkhttpClient());
 
         //Calling the API and setting the arguments
-        Call<PhotoRoot> call = api.getPhotoRoot(SOL,PAGE,API_KEY);
+        Call<PhotoRoot> call = api.getPhotoRoot(SOL, PAGE, API_KEY);
 
         call.enqueue(new Callback<PhotoRoot>() {
             @Override
@@ -82,7 +83,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
                 ArrayList<Photo> photoList = response.body().getPhotos();
 
                 mAdapter.setPhotoList(photoList);
-                }
+            }
 
             @Override
             public void onFailure(Call<PhotoRoot> call, Throwable t) {
@@ -105,7 +106,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
 
                     Api api = getRetrofit(getOkhttpClient());
 
-                    Call<PhotoRoot> call = api.getPhotoRoot(SOL,currentPage,API_KEY);
+                    Call<PhotoRoot> call = api.getPhotoRoot(SOL, currentPage, API_KEY);
 
                     call.enqueue(new Callback<PhotoRoot>() {
                         @Override
@@ -124,7 +125,7 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
             }
         });
 
-        mAdapter = new PhotoAdapter(PhotosFragment.this,false);
+        mAdapter = new PhotoAdapter(PhotosFragment.this, false);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(manager);
 
@@ -142,19 +143,19 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
         //Setting the args for the new fragment
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(DATASET, list);
-        bundle.putInt(POSITION,position);
+        bundle.putInt(POSITION, position);
 
         DetailsPhotoFragment detailsPhotoFragment = new DetailsPhotoFragment();
         detailsPhotoFragment.setArguments(bundle);
 
-        transaction.add(R.id.activity_main,detailsPhotoFragment);
+        transaction.add(R.id.activity_main, detailsPhotoFragment);
         transaction.addToBackStack(TRANSACTION_TAG);
         transaction.commit();
     }
 
 
     //Helper method to call Retrofit
-    private Api getRetrofit(OkHttpClient client){
+    private Api getRetrofit(OkHttpClient client) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Api.BASE_URL)
@@ -172,11 +173,11 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
         @Override
         public okhttp3.Response intercept(Chain chain) throws IOException {
             ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo =  connectivityManager.getActiveNetworkInfo();
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
             Request request = chain.request();
 
-            if (networkInfo!=null && !networkInfo.isConnected()){
+            if (networkInfo != null && !networkInfo.isConnected()) {
                 request = request.newBuilder()
                         .header("Cache-Control",
                                 "public, only-if-cached, max-stale=" + 2419200)
@@ -187,18 +188,18 @@ public class PhotosFragment extends Fragment implements PhotoAdapter.OnGridItemC
         }
     }
 
-    private class ResponseCacheInterceptor implements Interceptor{
+    private class ResponseCacheInterceptor implements Interceptor {
 
         @Override
         public okhttp3.Response intercept(Chain chain) throws IOException {
             okhttp3.Response originalResponse = chain.proceed(chain.request());
-            return  originalResponse.newBuilder()
+            return originalResponse.newBuilder()
                     .header("Cache-Control", "public, max-age=" + 60)
                     .build();
         }
     }
 
-    private  OkHttpClient getOkhttpClient(){
+    private OkHttpClient getOkhttpClient() {
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 // Enable response caching
