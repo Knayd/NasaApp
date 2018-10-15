@@ -1,6 +1,7 @@
 package com.example.applaudo.nasaapp.dialogfragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,9 +15,11 @@ import com.example.applaudo.nasaapp.fragments.DetailsPhotoFragment;
 import com.example.applaudo.nasaapp.models.Photo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class BottomSheetPhotoDialogFragment extends android.support.design.widget.BottomSheetDialogFragment {
 
@@ -33,6 +36,9 @@ public class BottomSheetPhotoDialogFragment extends android.support.design.widge
     @BindView(R.id.bottom_sheet_share)
     TextView mShare;
 
+    private List<Photo> dataList;
+    int position;
+
 
     @Nullable
     @Override
@@ -45,15 +51,28 @@ public class BottomSheetPhotoDialogFragment extends android.support.design.widge
         ButterKnife.bind(this, v);
 
         //Retrieving the data sent from the fullscreen photo
-        int position = bundle.getInt(DetailsPhotoFragment.DIALOG_POSITION);
-        ArrayList<Photo> dataList = bundle.getParcelableArrayList(DetailsPhotoFragment.DIALOG_LIST);
+        position = bundle.getInt(DetailsPhotoFragment.DIALOG_POSITION);
+
+        dataList = bundle.getParcelableArrayList(DetailsPhotoFragment.DIALOG_LIST);
 
 
         mName.setText(dataList.get(position).getCamera().getName());
         mLanding.setText(dataList.get(position).getRover().getLandingDate());
         mLaunch.setText(dataList.get(position).getRover().getLaunchDate());
-        mShare.setText("Share"); //TODO: Placeholder
+        mShare.setText("Share");
 
         return v;
     }
+
+
+    @OnClick(R.id.bottom_sheet_share)
+    public void shareUrl(){
+        Intent share = new Intent();
+        share.setType("text/plain");
+        share.putExtra(Intent.EXTRA_TEXT, dataList.get(position).getImageSrc());
+        startActivity(Intent.createChooser(share,"Share image!"));
+    }
+
+
+
 }
